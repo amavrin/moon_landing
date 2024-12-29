@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <unistd.h>
 
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -25,28 +26,40 @@ private:
     void render();
     void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
     void update_display(std::string message);
+    void finish_fail();
 
     sf::RenderWindow mWindow;
 
     sf::Texture mSpaceTexture;
     sf::Texture mLunarTexture;
     sf::Texture mPlayerTexture;
-    sf::Texture mFlameTexture;
+    sf::Texture mMainFlameTexture;
+    sf::Texture mLeftFlameTexture;
+    sf::Texture mRightFlameTexture;
     sf::Sprite mSpaceSprite;
     sf::Sprite mLunarSprite;
     sf::Sprite mPlayerSprite;
-    sf::Sprite mFlameSprite;
+    sf::Sprite mMainFlameSprite;
+    sf::Sprite mLeftFlameSprite;
+    sf::Sprite mRightFlameSprite;
     sf::Sound mRocketSound;
     sf::SoundBuffer mRocketSoundBuffer;
+    sf::Sound mExplosionSound;
+    sf::SoundBuffer mExplosionSoundBuffer;
+    sf::Music mBackgroundMusic;
 
     sf::Font mFont;
     sf::Text mText;
 
-    bool mIsFire = false;
-    bool mIsMovingLeft = false;
-    bool mIsMovingRight = false;
-    bool mIsFlameOn = false;
-    float mPlayerSpeed = 0.f;
+    bool mIsMainFire = false;
+    bool mIsLeftFire = false;
+    bool mIsRightFire = false;
+    bool mIsMainFlameLit = false;
+    bool mIsLeftFlameLit = false;
+    bool mIsRightFlameLit = false;
+    bool mGameOver = false;
+    float mPlayerVSpeed = 0.f;
+    float mPlayerHSpeed = 0.f;
     float mFuel = Config::INITIAL_FUEL;
 };
 
