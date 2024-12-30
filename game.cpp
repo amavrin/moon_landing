@@ -132,9 +132,9 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
     if (key == sf::Keyboard::Space)
         mIsMainFire = isPressed;
     else if (key == sf::Keyboard::A)
-        mIsRightFire = isPressed;
-    else if (key == sf::Keyboard::D)
         mIsLeftFire = isPressed;
+    else if (key == sf::Keyboard::D)
+        mIsRightFire = isPressed;
 }
 
 void Game::update_display(std::string message)
@@ -188,13 +188,13 @@ void Game::update(sf::Time deltaTime)
     }
     if (mIsLeftFire && mFuel > 0.f)
     {
-        mPlayerHSpeed -= Config::PLAYER_AUX_VELOCITY * deltaTime.asSeconds();
+        mPlayerHSpeed += Config::PLAYER_AUX_VELOCITY * deltaTime.asSeconds();
         mFuel -= Config::AUX_FUEL_CONSUMPTION * deltaTime.asSeconds();
         mIsLeftFlameLit = true;
     }
     if (mIsRightFire && mFuel > 0.f)
     {
-        mPlayerHSpeed += Config::PLAYER_AUX_VELOCITY * deltaTime.asSeconds();
+        mPlayerHSpeed -= Config::PLAYER_AUX_VELOCITY * deltaTime.asSeconds();
         mFuel -= Config::AUX_FUEL_CONSUMPTION * deltaTime.asSeconds();
         mIsRightFlameLit = true;
     }
@@ -218,9 +218,9 @@ void Game::render()
     if (mIsMainFlameLit)
         mWindow.draw(mMainFlameSprite);
     if (mIsLeftFlameLit)
-        mWindow.draw(mRightFlameSprite);
-    if (mIsRightFlameLit)
         mWindow.draw(mLeftFlameSprite);
+    if (mIsRightFlameLit)
+        mWindow.draw(mRightFlameSprite);
 
     mWindow.draw(mText);
     mWindow.display();
