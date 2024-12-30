@@ -19,6 +19,19 @@ int main(int argc, char *argv[])
     }
     float fuelVolume = program.get<float>("--fuel");
 
-    Game game(fuelVolume);
-    game.run();
+    try
+    {
+        Game game(fuelVolume);
+        game.run();
+    }
+    catch (const std::runtime_error &err)
+    {
+        std::cerr << err.what() << std::endl;
+        return 1;
+    }
+    catch (const std::exception &err)
+    {
+        std::cerr << err.what() << std::endl;
+        return 1;
+    }
 }

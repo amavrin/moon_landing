@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <iostream>
 #include <unistd.h>
+#include <map>
+#include <memory>
 
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -13,6 +15,27 @@
 #include <SFML/Audio.hpp>
 
 #include "config.hpp"
+
+enum class Textures
+{
+    Space,
+    Lunar,
+    Player,
+    MainFlame,
+    LeftFlame,
+    RightFlame
+};
+
+class TextureHolder
+{
+public:
+    sf::Texture &get(Textures id);
+    const sf::Texture &get(Textures id) const;
+    void load(Textures id, const std::string &filename);
+
+private:
+    std::map<Textures, std::unique_ptr<sf::Texture>> mTextures;
+};
 
 class Game
 {
@@ -30,12 +53,7 @@ private:
 
     sf::RenderWindow mWindow;
 
-    sf::Texture mSpaceTexture;
-    sf::Texture mLunarTexture;
-    sf::Texture mPlayerTexture;
-    sf::Texture mMainFlameTexture;
-    sf::Texture mLeftFlameTexture;
-    sf::Texture mRightFlameTexture;
+    TextureHolder mTextureHolder;
     sf::Sprite mSpaceSprite;
     sf::Sprite mLunarSprite;
     sf::Sprite mPlayerSprite;

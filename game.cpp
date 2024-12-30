@@ -2,18 +2,13 @@
 
 Game::Game(float fuelVolume)
     : mWindow(sf::VideoMode(640u, 480u, 32u), "SFML Application"),
-      mSpaceTexture(),
-      mLunarTexture(),
+      mTextureHolder(),
       mSpaceSprite(),
       mLunarSprite(),
-      mPlayerTexture(),
       mPlayerSprite(),
-      mMainFlameTexture(),
       mMainFlameSprite(),
       mFont(), mText(),
       mRocketSound(), mRocketSoundBuffer(),
-      mLeftFlameTexture(),
-      mRightFlameTexture(),
       mLeftFlameSprite(),
       mRightFlameSprite(),
       mBackgroundMusic(),
@@ -21,44 +16,27 @@ Game::Game(float fuelVolume)
       mExplosionSoundBuffer()
 {
     mFuel = fuelVolume;
-    if (!mPlayerTexture.loadFromFile(Config::PLAYER_TEXTURE_PATH))
-    {
-        throw std::runtime_error("Failed to load lunar module texture");
-    }
-    mPlayerSprite.setTexture(mPlayerTexture);
+    mTextureHolder.load(Textures::Space, Config::SPACE_TEXTURE_PATH);
+    mTextureHolder.load(Textures::Lunar, Config::LUNAR_TEXTURE_PATH);
+    mTextureHolder.load(Textures::Player, Config::PLAYER_TEXTURE_PATH);
+    mTextureHolder.load(Textures::MainFlame, Config::MAIN_FLAME_TEXTURE_PATH);
+    mTextureHolder.load(Textures::LeftFlame, Config::LEFT_FLAME_TEXTURE_PATH);
+    mTextureHolder.load(Textures::RightFlame, Config::RIGHT_FLAME_TEXTURE_PATH);
+
+    mPlayerSprite.setTexture(mTextureHolder.get(Textures::Player));
     mPlayerSprite.setPosition({Config::INITIAL_PLAYER_X, Config::INITIAL_PLAYER_Y});
 
-    if (!mSpaceTexture.loadFromFile(Config::SPACE_TEXTURE_PATH))
-    {
-        throw std::runtime_error("Failed to load space texture");
-    }
-    mSpaceSprite.setTexture(mSpaceTexture);
+    mSpaceSprite.setTexture(mTextureHolder.get(Textures::Space));
     mSpaceSprite.setPosition({0.f, 0.f});
 
-    if (!mLunarTexture.loadFromFile(Config::LUNAR_TEXTURE_PATH))
-    {
-        throw std::runtime_error("Failed to load lunar texture");
-    }
-    mLunarSprite.setTexture(mLunarTexture);
+    mLunarSprite.setTexture(mTextureHolder.get(Textures::Lunar));
     mLunarSprite.setPosition({0.f, Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT});
 
-    if (!mMainFlameTexture.loadFromFile(Config::MAIN_FLAME_TEXTURE_PATH))
-    {
-        throw std::runtime_error("Failed to load flame texture");
-    }
-    mMainFlameSprite.setTexture(mMainFlameTexture);
+    mMainFlameSprite.setTexture(mTextureHolder.get(Textures::MainFlame));
 
-    if (!mLeftFlameTexture.loadFromFile(Config::LEFT_FLAME_TEXTURE_PATH))
-    {
-        throw std::runtime_error("Failed to load left flame texture");
-    }
-    mLeftFlameSprite.setTexture(mLeftFlameTexture);
+    mLeftFlameSprite.setTexture(mTextureHolder.get(Textures::LeftFlame));
 
-    if (!mRightFlameTexture.loadFromFile(Config::RIGHT_FLAME_TEXTURE_PATH))
-    {
-        throw std::runtime_error("Failed to load right flame texture");
-    }
-    mRightFlameSprite.setTexture(mRightFlameTexture);
+    mRightFlameSprite.setTexture(mTextureHolder.get(Textures::RightFlame));
 
     if (!mFont.loadFromFile(Config::FONT_PATH))
     {
