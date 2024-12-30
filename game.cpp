@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game()
+Game::Game(float fuelVolume)
     : mWindow(sf::VideoMode(640u, 480u, 32u), "SFML Application"),
       mSpaceTexture(),
       mLunarTexture(),
@@ -20,6 +20,7 @@ Game::Game()
       mExplosionSound(),
       mExplosionSoundBuffer()
 {
+    mFuel = fuelVolume;
     if (!mPlayerTexture.loadFromFile(Config::PLAYER_TEXTURE_PATH))
     {
         throw std::runtime_error("Failed to load lunar module texture");

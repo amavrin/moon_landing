@@ -17,7 +17,7 @@
 class Game
 {
 public:
-    Game();
+    Game(float fluelVolume = Config::INITIAL_FUEL);
     void run();
 
 private:
@@ -60,7 +60,7 @@ private:
     bool mGameOver = false;
     float mPlayerVSpeed = 0.f;
     float mPlayerHSpeed = 0.f;
-    float mFuel = Config::INITIAL_FUEL;
+    float mFuel;
 };
 
 #endif // GAME_HPP
