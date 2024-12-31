@@ -7,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <cassert>
 
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>

@@ -21,50 +21,48 @@ std::string to_string(Entity id)
     }
 }
 
-void TextureHolder::load(Entity id, const std::string &filename)
+template <typename Resource, typename Identifier>
+void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string &filename)
 {
-    std::unique_ptr<sf::Texture> t(new sf::Texture());
+    std::unique_ptr<Resource> t(new Resource());
 
     if (!t->loadFromFile(filename))
     {
-        throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
+        throw std::runtime_error("ResourseHolder::load - Failed to load " + filename);
     }
-    auto inserted = mTextures.insert(std::make_pair(id, std::move(t)));
-    if (!inserted.second)
-    {
-        throw std::logic_error("TextureHolder::load - Texture already exists for id " + to_string(id) + "");
-    }
+    auto inserted = mResources.insert(std::make_pair(id, std::move(t)));
+    assert(inserted.second);
 }
 
-sf::Texture &TextureHolder::get(Entity id)
+template <typename Resource, typename Identifier>
+Resource &ResourceHolder<Resource, Identifier>::get(Identifier id)
 {
-    auto found = mTextures.find(id);
-    if (found == mTextures.end())
-    {
-        throw std::runtime_error("TextureHolder::get - Texture not found");
-    }
+    auto found = mResources.find(id);
+    assert(found != mResources.end());
     return *found->second;
 };
 
-sf::Texture &TextureHolder::operator[](Entity id)
+template <typename Resource, typename Identifier>
+Resource &ResourceHolder<Resource, Identifier>::operator[](Identifier id)
 {
     return get(id);
 };
 
-const sf::Texture &TextureHolder::get(Entity id) const
+template <typename Resource, typename Identifier>
+const Resource &ResourceHolder<Resource, Identifier>::get(Identifier id) const
 {
-    auto found = mTextures.find(id);
-    if (found == mTextures.end())
-    {
-        throw std::runtime_error("TextureHolder::get - Texture not found");
-    }
+    auto found = mResources.find(id);
+    assert(found != mResources.end());
     return *found->second;
 };
 
-const sf::Texture &TextureHolder::operator[](Entity id) const
+template <typename Resource, typename Identifier>
+const Resource &ResourceHolder<Resource, Identifier>::operator[](Identifier id) const
 {
     return get(id);
 };
+
+//
 
 void SpriteHolder::add(Entity id, const sf::Texture &texture)
 {
@@ -76,10 +74,7 @@ void SpriteHolder::add(Entity id, const sf::Texture &texture)
 sf::Sprite &SpriteHolder::get(Entity id)
 {
     auto found = mSprites.find(id);
-    if (found == mSprites.end())
-    {
-        throw std::runtime_error("SpriteHolder::get - Sprite not found");
-    }
+    assert(found != mSprites.end());
     return *found->second;
 };
 
@@ -91,10 +86,7 @@ sf::Sprite &SpriteHolder::operator[](Entity id)
 const sf::Sprite &SpriteHolder::get(Entity id) const
 {
     auto found = mSprites.find(id);
-    if (found == mSprites.end())
-    {
-        throw std::runtime_error("SpriteHolder::get - Sprite not found");
-    }
+    assert(found != mSprites.end());
     return *found->second;
 };
 

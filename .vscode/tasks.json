@@ -16,8 +16,8 @@
                 "-lsfml-system",
                 "-lsfml-audio",
                 "main.cpp",
-                "game.cpp",
                 "resourcemanagers.cpp",
+                "game.cpp",
                 "-o",
                 "game"
             ],

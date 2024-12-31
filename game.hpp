@@ -22,7 +22,7 @@ private:
 
     sf::RenderWindow mWindow;
 
-    TextureHolder mTextureHolder;
+    ResourceHolder<sf::Texture, Entity> mTextureHolder;
     SpriteHolder mSpriteHolder;
 
     sf::Sound mRocketSound;

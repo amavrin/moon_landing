@@ -16,17 +16,18 @@ enum class Entity
 
 std::string toString(Entity texture);
 
-class TextureHolder
+template <typename Resource, typename Identifier>
+class ResourceHolder
 {
 public:
-    sf::Texture &get(Entity id);
-    const sf::Texture &get(Entity id) const;
-    sf::Texture &operator[](Entity id);
-    const sf::Texture &operator[](Entity id) const;
-    void load(Entity id, const std::string &filename);
+    Resource &get(Identifier id);
+    const Resource &get(Identifier id) const;
+    Resource &operator[](Identifier id);
+    const Resource &operator[](Identifier id) const;
+    void load(Identifier id, const std::string &filename);
 
 private:
-    std::map<Entity, std::unique_ptr<sf::Texture>> mTextures;
+    std::map<Identifier, std::unique_ptr<Resource>> mResources;
 };
 
 class SpriteHolder
