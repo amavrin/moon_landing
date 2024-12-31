@@ -1,40 +1,10 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#ifndef GAME_H
+#define GAME_H
 
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <memory>
-
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-
 #include "config.hpp"
-
-enum class Textures
-{
-    Space,
-    Lunar,
-    Player,
-    MainFlame,
-    LeftFlame,
-    RightFlame
-};
-
-class TextureHolder
-{
-public:
-    sf::Texture &get(Textures id);
-    const sf::Texture &get(Textures id) const;
-    void load(Textures id, const std::string &filename);
-
-private:
-    std::map<Textures, std::unique_ptr<sf::Texture>> mTextures;
-};
+#include "resourcemanagers.hpp"
 
 class Game
 {
@@ -53,12 +23,8 @@ private:
     sf::RenderWindow mWindow;
 
     TextureHolder mTextureHolder;
-    sf::Sprite mSpaceSprite;
-    sf::Sprite mLunarSprite;
-    sf::Sprite mPlayerSprite;
-    sf::Sprite mMainFlameSprite;
-    sf::Sprite mLeftFlameSprite;
-    sf::Sprite mRightFlameSprite;
+    SpriteHolder mSpriteHolder;
+
     sf::Sound mRocketSound;
     sf::SoundBuffer mRocketSoundBuffer;
     sf::Sound mExplosionSound;

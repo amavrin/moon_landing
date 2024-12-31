@@ -1,42 +1,33 @@
-#include "game.hpp"
+#include "main.hpp"
 
 Game::Game(float fuelVolume)
     : mWindow(sf::VideoMode(640u, 480u, 32u), "SFML Application"),
       mTextureHolder(),
-      mSpaceSprite(),
-      mLunarSprite(),
-      mPlayerSprite(),
-      mMainFlameSprite(),
+      mSpriteHolder(),
       mFont(), mText(),
       mRocketSound(), mRocketSoundBuffer(),
-      mLeftFlameSprite(),
-      mRightFlameSprite(),
       mBackgroundMusic(),
       mExplosionSound(),
       mExplosionSoundBuffer()
 {
     mFuel = fuelVolume;
-    mTextureHolder.load(Textures::Space, Config::SPACE_TEXTURE_PATH);
-    mTextureHolder.load(Textures::Lunar, Config::LUNAR_TEXTURE_PATH);
-    mTextureHolder.load(Textures::Player, Config::PLAYER_TEXTURE_PATH);
-    mTextureHolder.load(Textures::MainFlame, Config::MAIN_FLAME_TEXTURE_PATH);
-    mTextureHolder.load(Textures::LeftFlame, Config::LEFT_FLAME_TEXTURE_PATH);
-    mTextureHolder.load(Textures::RightFlame, Config::RIGHT_FLAME_TEXTURE_PATH);
+    mTextureHolder.load(Texture::Space, Config::SPACE_TEXTURE_PATH);
+    mTextureHolder.load(Texture::Lunar, Config::LUNAR_TEXTURE_PATH);
+    mTextureHolder.load(Texture::Player, Config::PLAYER_TEXTURE_PATH);
+    mTextureHolder.load(Texture::MainFlame, Config::MAIN_FLAME_TEXTURE_PATH);
+    mTextureHolder.load(Texture::LeftFlame, Config::LEFT_FLAME_TEXTURE_PATH);
+    mTextureHolder.load(Texture::RightFlame, Config::RIGHT_FLAME_TEXTURE_PATH);
 
-    mPlayerSprite.setTexture(mTextureHolder.get(Textures::Player));
-    mPlayerSprite.setPosition({Config::INITIAL_PLAYER_X, Config::INITIAL_PLAYER_Y});
+    mSpriteHolder.add(Sprite::Space, mTextureHolder.get(Texture::Space));
+    mSpriteHolder.add(Sprite::Lunar, mTextureHolder.get(Texture::Lunar));
+    mSpriteHolder.add(Sprite::Player, mTextureHolder.get(Texture::Player));
+    mSpriteHolder.add(Sprite::MainFlame, mTextureHolder.get(Texture::MainFlame));
+    mSpriteHolder.add(Sprite::LeftFlame, mTextureHolder.get(Texture::LeftFlame));
+    mSpriteHolder.add(Sprite::RightFlame, mTextureHolder.get(Texture::RightFlame));
 
-    mSpaceSprite.setTexture(mTextureHolder.get(Textures::Space));
-    mSpaceSprite.setPosition({0.f, 0.f});
-
-    mLunarSprite.setTexture(mTextureHolder.get(Textures::Lunar));
-    mLunarSprite.setPosition({0.f, Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT});
-
-    mMainFlameSprite.setTexture(mTextureHolder.get(Textures::MainFlame));
-
-    mLeftFlameSprite.setTexture(mTextureHolder.get(Textures::LeftFlame));
-
-    mRightFlameSprite.setTexture(mTextureHolder.get(Textures::RightFlame));
+    mSpriteHolder.get(Sprite::Player).setPosition({Config::INITIAL_PLAYER_X, Config::INITIAL_PLAYER_Y});
+    mSpriteHolder.get(Sprite::Space).setPosition({0.f, 0.f});
+    mSpriteHolder.get(Sprite::Lunar).setPosition({0.f, Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT});
 
     if (!mFont.loadFromFile(Config::FONT_PATH))
     {
@@ -133,9 +124,9 @@ void Game::update(sf::Time deltaTime)
     mIsLeftFlameLit = false;
     mIsRightFlameLit = false;
     float landingY = Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT - Config::LUNAR_MODULE_HEIGHT;
-    if (mPlayerSprite.getPosition().y >= landingY)
+    if (mSpriteHolder.get(Sprite::Player).getPosition().y >= landingY)
     {
-        mPlayerSprite.setPosition({mPlayerSprite.getPosition().x, landingY});
+        mSpriteHolder.get(Sprite::Player).setPosition({mSpriteHolder.get(Sprite::Player).getPosition().x, landingY});
         if (mPlayerVSpeed < -Config::MAXIMUM_LANDING_V_SPEED)
         {
             mText.setFillColor(sf::Color::Red);
@@ -179,10 +170,10 @@ void Game::update(sf::Time deltaTime)
 
     movement.y -= mPlayerVSpeed;
     movement.x += mPlayerHSpeed;
-    mPlayerSprite.move(movement * deltaTime.asSeconds());
-    mMainFlameSprite.setPosition(mPlayerSprite.getPosition() + sf::Vector2f(0.f, Config::LUNAR_MODULE_HEIGHT));
-    mLeftFlameSprite.setPosition(mPlayerSprite.getPosition() + sf::Vector2f(-Config::AUX_FLAME_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
-    mRightFlameSprite.setPosition(mPlayerSprite.getPosition() + sf::Vector2f(Config::LUNAR_MODULE_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
+    mSpriteHolder.get(Sprite::Player).move(movement * deltaTime.asSeconds());
+    mSpriteHolder.get(Sprite::MainFlame).setPosition(mSpriteHolder.get(Sprite::Player).getPosition() + sf::Vector2f(0.f, Config::LUNAR_MODULE_HEIGHT));
+    mSpriteHolder.get(Sprite::LeftFlame).setPosition(mSpriteHolder.get(Sprite::Player).getPosition() + sf::Vector2f(-Config::AUX_FLAME_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
+    mSpriteHolder.get(Sprite::RightFlame).setPosition(mSpriteHolder.get(Sprite::Player).getPosition() + sf::Vector2f(Config::LUNAR_MODULE_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
 
     update_display("landing...");
 }
@@ -190,15 +181,15 @@ void Game::update(sf::Time deltaTime)
 void Game::render()
 {
     mWindow.clear();
-    mWindow.draw(mSpaceSprite);
-    mWindow.draw(mLunarSprite);
-    mWindow.draw(mPlayerSprite);
+    mWindow.draw(mSpriteHolder.get(Sprite::Space));
+    mWindow.draw(mSpriteHolder.get(Sprite::Lunar));
+    mWindow.draw(mSpriteHolder.get(Sprite::Player));
     if (mIsMainFlameLit)
-        mWindow.draw(mMainFlameSprite);
+        mWindow.draw(mSpriteHolder.get(Sprite::MainFlame));
     if (mIsLeftFlameLit)
-        mWindow.draw(mLeftFlameSprite);
+        mWindow.draw(mSpriteHolder.get(Sprite::LeftFlame));
     if (mIsRightFlameLit)
-        mWindow.draw(mRightFlameSprite);
+        mWindow.draw(mSpriteHolder.get(Sprite::RightFlame));
 
     mWindow.draw(mText);
     mWindow.display();

@@ -1,4 +1,4 @@
-#include "game.hpp"
+#include "main.hpp"
 #include "argparse/argparse.hpp"
 
 int main(int argc, char *argv[])
