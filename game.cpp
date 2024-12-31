@@ -124,9 +124,10 @@ void Game::update(sf::Time deltaTime)
     mIsLeftFlameLit = false;
     mIsRightFlameLit = false;
     float landingY = Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT - Config::LUNAR_MODULE_HEIGHT;
-    if (mSpriteHolder.get(Sprite::Player).getPosition().y >= landingY)
+    auto playerPos = mSpriteHolder.get(Sprite::Player).getPosition();
+    if (playerPos.y >= landingY)
     {
-        mSpriteHolder.get(Sprite::Player).setPosition({mSpriteHolder.get(Sprite::Player).getPosition().x, landingY});
+        mSpriteHolder.get(Sprite::Player).setPosition({playerPos.x, landingY});
         if (mPlayerVSpeed < -Config::MAXIMUM_LANDING_V_SPEED)
         {
             mText.setFillColor(sf::Color::Red);
