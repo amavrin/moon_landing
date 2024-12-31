@@ -18,16 +18,16 @@ Game::Game(float fuelVolume)
     mTextureHolder.load(Texture::LeftFlame, Config::LEFT_FLAME_TEXTURE_PATH);
     mTextureHolder.load(Texture::RightFlame, Config::RIGHT_FLAME_TEXTURE_PATH);
 
-    mSpriteHolder.add(Sprite::Space, mTextureHolder.get(Texture::Space));
-    mSpriteHolder.add(Sprite::Lunar, mTextureHolder.get(Texture::Lunar));
-    mSpriteHolder.add(Sprite::Player, mTextureHolder.get(Texture::Player));
-    mSpriteHolder.add(Sprite::MainFlame, mTextureHolder.get(Texture::MainFlame));
-    mSpriteHolder.add(Sprite::LeftFlame, mTextureHolder.get(Texture::LeftFlame));
-    mSpriteHolder.add(Sprite::RightFlame, mTextureHolder.get(Texture::RightFlame));
+    mSpriteHolder.add(Sprite::Space, mTextureHolder[Texture::Space]);
+    mSpriteHolder.add(Sprite::Lunar, mTextureHolder[Texture::Lunar]);
+    mSpriteHolder.add(Sprite::Player, mTextureHolder[Texture::Player]);
+    mSpriteHolder.add(Sprite::MainFlame, mTextureHolder[Texture::MainFlame]);
+    mSpriteHolder.add(Sprite::LeftFlame, mTextureHolder[Texture::LeftFlame]);
+    mSpriteHolder.add(Sprite::RightFlame, mTextureHolder[Texture::RightFlame]);
 
-    mSpriteHolder.get(Sprite::Player).setPosition({Config::INITIAL_PLAYER_X, Config::INITIAL_PLAYER_Y});
-    mSpriteHolder.get(Sprite::Space).setPosition({0.f, 0.f});
-    mSpriteHolder.get(Sprite::Lunar).setPosition({0.f, Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT});
+    mSpriteHolder[Sprite::Player].setPosition({Config::INITIAL_PLAYER_X, Config::INITIAL_PLAYER_Y});
+    mSpriteHolder[Sprite::Space].setPosition({0.f, 0.f});
+    mSpriteHolder[Sprite::Lunar].setPosition({0.f, Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT});
 
     if (!mFont.loadFromFile(Config::FONT_PATH))
     {
@@ -124,10 +124,10 @@ void Game::update(sf::Time deltaTime)
     mIsLeftFlameLit = false;
     mIsRightFlameLit = false;
     float landingY = Config::WINDOW_HEIGHT - Config::LUNAR_HEIGHT - Config::LUNAR_MODULE_HEIGHT;
-    auto playerPos = mSpriteHolder.get(Sprite::Player).getPosition();
+    auto playerPos = mSpriteHolder[Sprite::Player].getPosition();
     if (playerPos.y >= landingY)
     {
-        mSpriteHolder.get(Sprite::Player).setPosition({playerPos.x, landingY});
+        mSpriteHolder[Sprite::Player].setPosition({playerPos.x, landingY});
         if (mPlayerVSpeed < -Config::MAXIMUM_LANDING_V_SPEED)
         {
             mText.setFillColor(sf::Color::Red);
@@ -171,10 +171,11 @@ void Game::update(sf::Time deltaTime)
 
     movement.y -= mPlayerVSpeed;
     movement.x += mPlayerHSpeed;
-    mSpriteHolder.get(Sprite::Player).move(movement * deltaTime.asSeconds());
-    mSpriteHolder.get(Sprite::MainFlame).setPosition(mSpriteHolder.get(Sprite::Player).getPosition() + sf::Vector2f(0.f, Config::LUNAR_MODULE_HEIGHT));
-    mSpriteHolder.get(Sprite::LeftFlame).setPosition(mSpriteHolder.get(Sprite::Player).getPosition() + sf::Vector2f(-Config::AUX_FLAME_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
-    mSpriteHolder.get(Sprite::RightFlame).setPosition(mSpriteHolder.get(Sprite::Player).getPosition() + sf::Vector2f(Config::LUNAR_MODULE_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
+    mSpriteHolder[Sprite::Player].move(movement * deltaTime.asSeconds());
+    auto playerPosition = mSpriteHolder[Sprite::Player].getPosition();
+    mSpriteHolder[Sprite::MainFlame].setPosition(playerPosition + sf::Vector2f(0.f, Config::LUNAR_MODULE_HEIGHT));
+    mSpriteHolder[Sprite::LeftFlame].setPosition(playerPosition + sf::Vector2f(-Config::AUX_FLAME_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
+    mSpriteHolder[Sprite::RightFlame].setPosition(playerPosition + sf::Vector2f(Config::LUNAR_MODULE_WIDTH, Config::LUNAR_MODULE_HEIGHT / 2));
 
     update_display("landing...");
 }
@@ -182,15 +183,15 @@ void Game::update(sf::Time deltaTime)
 void Game::render()
 {
     mWindow.clear();
-    mWindow.draw(mSpriteHolder.get(Sprite::Space));
-    mWindow.draw(mSpriteHolder.get(Sprite::Lunar));
-    mWindow.draw(mSpriteHolder.get(Sprite::Player));
+    mWindow.draw(mSpriteHolder[Sprite::Space]);
+    mWindow.draw(mSpriteHolder[Sprite::Lunar]);
+    mWindow.draw(mSpriteHolder[Sprite::Player]);
     if (mIsMainFlameLit)
-        mWindow.draw(mSpriteHolder.get(Sprite::MainFlame));
+        mWindow.draw(mSpriteHolder[Sprite::MainFlame]);
     if (mIsLeftFlameLit)
-        mWindow.draw(mSpriteHolder.get(Sprite::LeftFlame));
+        mWindow.draw(mSpriteHolder[Sprite::LeftFlame]);
     if (mIsRightFlameLit)
-        mWindow.draw(mSpriteHolder.get(Sprite::RightFlame));
+        mWindow.draw(mSpriteHolder[Sprite::RightFlame]);
 
     mWindow.draw(mText);
     mWindow.display();

@@ -21,6 +21,11 @@ sf::Texture &TextureHolder::get(Texture id)
     return *found->second;
 };
 
+sf::Texture &TextureHolder::operator[](Texture id)
+{
+    return get(id);
+};
+
 const sf::Texture &TextureHolder::get(Texture id) const
 {
     auto found = mTextures.find(id);
@@ -29,6 +34,11 @@ const sf::Texture &TextureHolder::get(Texture id) const
         throw std::runtime_error("TextureHolder::get - Texture not found");
     }
     return *found->second;
+};
+
+const sf::Texture &TextureHolder::operator[](Texture id) const
+{
+    return get(id);
 };
 
 void SpriteHolder::add(Sprite id, const sf::Texture &texture)
@@ -48,6 +58,11 @@ sf::Sprite &SpriteHolder::get(Sprite id)
     return *found->second;
 };
 
+sf::Sprite &SpriteHolder::operator[](Sprite id)
+{
+    return get(id);
+};
+
 const sf::Sprite &SpriteHolder::get(Sprite id) const
 {
     auto found = mSprites.find(id);
@@ -56,4 +71,9 @@ const sf::Sprite &SpriteHolder::get(Sprite id) const
         throw std::runtime_error("SpriteHolder::get - Sprite not found");
     }
     return *found->second;
+};
+
+const sf::Sprite &SpriteHolder::operator[](Sprite id) const
+{
+    return get(id);
 };

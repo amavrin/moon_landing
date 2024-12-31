@@ -29,6 +29,8 @@ class TextureHolder
 public:
     sf::Texture &get(Texture id);
     const sf::Texture &get(Texture id) const;
+    sf::Texture &operator[](Texture id);
+    const sf::Texture &operator[](Texture id) const;
     void load(Texture id, const std::string &filename);
 
 private:
@@ -39,6 +41,8 @@ class SpriteHolder
 {
 public:
     sf::Sprite &get(Sprite id);
+    sf::Sprite &operator[](Sprite id);
+    const sf::Sprite &operator[](Sprite id) const;
     const sf::Sprite &get(Sprite id) const;
     void add(Sprite id, const sf::Texture &texture);
 
