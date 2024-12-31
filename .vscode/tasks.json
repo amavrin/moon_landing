@@ -17,7 +17,7 @@
                 "-lsfml-audio",
                 "main.cpp",
                 "game.cpp",
-                "textureholder.cpp",
+                "resourcemanagers.cpp",
                 "-o",
                 "game"
             ],
