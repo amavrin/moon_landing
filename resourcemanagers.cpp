@@ -1,6 +1,27 @@
-#include "game.hpp"
+#include "main.hpp"
 
-void TextureHolder::load(Texture id, const std::string &filename)
+std::string to_string(Entity id)
+{
+    switch (id)
+    {
+    case Entity::Space:
+        return "Space";
+    case Entity::Lunar:
+        return "Lunar";
+    case Entity::Player:
+        return "Player";
+    case Entity::MainFlame:
+        return "MainFlame";
+    case Entity::LeftFlame:
+        return "LeftFlame";
+    case Entity::RightFlame:
+        return "RightFlame";
+    default:
+        throw std::runtime_error("TextureHolder::toString - Unknown texture id");
+    }
+}
+
+void TextureHolder::load(Entity id, const std::string &filename)
 {
     std::unique_ptr<sf::Texture> t(new sf::Texture());
 
@@ -8,10 +29,14 @@ void TextureHolder::load(Texture id, const std::string &filename)
     {
         throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
     }
-    mTextures.insert(std::make_pair(id, std::move(t)));
+    auto inserted = mTextures.insert(std::make_pair(id, std::move(t)));
+    if (!inserted.second)
+    {
+        throw std::logic_error("TextureHolder::load - Texture already exists for id " + to_string(id) + "");
+    }
 }
 
-sf::Texture &TextureHolder::get(Texture id)
+sf::Texture &TextureHolder::get(Entity id)
 {
     auto found = mTextures.find(id);
     if (found == mTextures.end())
@@ -21,12 +46,12 @@ sf::Texture &TextureHolder::get(Texture id)
     return *found->second;
 };
 
-sf::Texture &TextureHolder::operator[](Texture id)
+sf::Texture &TextureHolder::operator[](Entity id)
 {
     return get(id);
 };
 
-const sf::Texture &TextureHolder::get(Texture id) const
+const sf::Texture &TextureHolder::get(Entity id) const
 {
     auto found = mTextures.find(id);
     if (found == mTextures.end())
@@ -36,19 +61,19 @@ const sf::Texture &TextureHolder::get(Texture id) const
     return *found->second;
 };
 
-const sf::Texture &TextureHolder::operator[](Texture id) const
+const sf::Texture &TextureHolder::operator[](Entity id) const
 {
     return get(id);
 };
 
-void SpriteHolder::add(Sprite id, const sf::Texture &texture)
+void SpriteHolder::add(Entity id, const sf::Texture &texture)
 {
     std::unique_ptr<sf::Sprite> s(new sf::Sprite());
     s->setTexture(texture);
     mSprites.insert(std::make_pair(id, std::move(s)));
 }
 
-sf::Sprite &SpriteHolder::get(Sprite id)
+sf::Sprite &SpriteHolder::get(Entity id)
 {
     auto found = mSprites.find(id);
     if (found == mSprites.end())
@@ -58,12 +83,12 @@ sf::Sprite &SpriteHolder::get(Sprite id)
     return *found->second;
 };
 
-sf::Sprite &SpriteHolder::operator[](Sprite id)
+sf::Sprite &SpriteHolder::operator[](Entity id)
 {
     return get(id);
 };
 
-const sf::Sprite &SpriteHolder::get(Sprite id) const
+const sf::Sprite &SpriteHolder::get(Entity id) const
 {
     auto found = mSprites.find(id);
     if (found == mSprites.end())
@@ -73,7 +98,7 @@ const sf::Sprite &SpriteHolder::get(Sprite id) const
     return *found->second;
 };
 
-const sf::Sprite &SpriteHolder::operator[](Sprite id) const
+const sf::Sprite &SpriteHolder::operator[](Entity id) const
 {
     return get(id);
 };
