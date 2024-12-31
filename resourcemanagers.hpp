@@ -52,14 +52,20 @@ void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string
         throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
     }
     auto inserted = mResources.emplace(id, std::move(resource));
-    assert(inserted.second);
+    if (!inserted.second)
+    {
+        throw std::runtime_error("ResourceHolder::load - Failed to insert " + filename);
+    }
 }
 
 template <typename Resource, typename Identifier>
 Resource &ResourceHolder<Resource, Identifier>::get(Identifier id)
 {
     auto found = mResources.find(id);
-    assert(found != mResources.end());
+    if (found == mResources.end())
+    {
+        throw std::runtime_error("ResourceHolder::get - Resource not found");
+    }
     return *found->second;
 };
 
@@ -73,7 +79,10 @@ template <typename Resource, typename Identifier>
 const Resource &ResourceHolder<Resource, Identifier>::get(Identifier id) const
 {
     auto found = mResources.find(id);
-    assert(found != mResources.end());
+    if (found == mResources.end())
+    {
+        throw std::runtime_error("ResourceHolder::get - Resource not found");
+    }
     return *found->second;
 };
 

@@ -33,7 +33,10 @@ void SpriteHolder::add(Entity id, const sf::Texture &texture)
 sf::Sprite &SpriteHolder::get(Entity id)
 {
     auto found = mSprites.find(id);
-    assert(found != mSprites.end());
+    if (found == mSprites.end())
+    {
+        throw std::runtime_error("SpriteHolder::get - Sprite not found");
+    }
     return *found->second;
 };
 
@@ -45,7 +48,10 @@ sf::Sprite &SpriteHolder::operator[](Entity id)
 const sf::Sprite &SpriteHolder::get(Entity id) const
 {
     auto found = mSprites.find(id);
-    assert(found != mSprites.end());
+    if (found == mSprites.end())
+    {
+        throw std::runtime_error("SpriteHolder::get - Sprite not found");
+    }
     return *found->second;
 };
 
