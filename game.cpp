@@ -212,7 +212,7 @@ void Game::finish_fail()
 {
     mBackgroundMusic.stop();
     mRocketSound.stop();
-    usleep(300);
+    sf::sleep(sf::milliseconds(200));
     mExplosionSound.play();
     mGameOver = true;
 }
