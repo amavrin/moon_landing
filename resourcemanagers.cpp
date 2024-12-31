@@ -27,7 +27,11 @@ void SpriteHolder::add(Entity id, const sf::Texture &texture)
 {
     auto sprite = std::make_unique<sf::Sprite>();
     sprite->setTexture(texture);
-    mSprites.emplace(id, std::move(sprite));
+    auto inserted = mSprites.emplace(id, std::move(sprite));
+    if (!inserted.second)
+    {
+        throw std::runtime_error("SpriteHolder::add - Failed to insert sprite");
+    }
 }
 
 sf::Sprite &SpriteHolder::get(Entity id)
