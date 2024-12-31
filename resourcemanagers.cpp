@@ -21,56 +21,17 @@ std::string to_string(Entity id)
     }
 }
 
-void TextureHolder::load(Entity id, const std::string &filename)
-{
-    std::unique_ptr<sf::Texture> t(new sf::Texture());
-
-    if (!t->loadFromFile(filename))
-    {
-        throw std::runtime_error("TextureHolder::load - Failed to load " + filename);
-    }
-    auto inserted = mTextures.insert(std::make_pair(id, std::move(t)));
-    if (!inserted.second)
-    {
-        throw std::logic_error("TextureHolder::load - Texture already exists for id " + to_string(id) + "");
-    }
-}
-
-sf::Texture &TextureHolder::get(Entity id)
-{
-    auto found = mTextures.find(id);
-    if (found == mTextures.end())
-    {
-        throw std::runtime_error("TextureHolder::get - Texture not found");
-    }
-    return *found->second;
-};
-
-sf::Texture &TextureHolder::operator[](Entity id)
-{
-    return get(id);
-};
-
-const sf::Texture &TextureHolder::get(Entity id) const
-{
-    auto found = mTextures.find(id);
-    if (found == mTextures.end())
-    {
-        throw std::runtime_error("TextureHolder::get - Texture not found");
-    }
-    return *found->second;
-};
-
-const sf::Texture &TextureHolder::operator[](Entity id) const
-{
-    return get(id);
-};
+//
 
 void SpriteHolder::add(Entity id, const sf::Texture &texture)
 {
-    std::unique_ptr<sf::Sprite> s(new sf::Sprite());
-    s->setTexture(texture);
-    mSprites.insert(std::make_pair(id, std::move(s)));
+    auto sprite = std::make_unique<sf::Sprite>();
+    sprite->setTexture(texture);
+    auto inserted = mSprites.emplace(id, std::move(sprite));
+    if (!inserted.second)
+    {
+        throw std::runtime_error("SpriteHolder::add - Failed to insert sprite");
+    }
 }
 
 sf::Sprite &SpriteHolder::get(Entity id)
