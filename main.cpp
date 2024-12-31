@@ -24,11 +24,6 @@ int main(int argc, char *argv[])
         Game game(fuelVolume);
         game.run();
     }
-    catch (const std::runtime_error &err)
-    {
-        std::cerr << err.what() << std::endl;
-        return 1;
-    }
     catch (const std::exception &err)
     {
         std::cerr << err.what() << std::endl;
