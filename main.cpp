@@ -1,4 +1,4 @@
-#include "game.hpp"
+#include "main.hpp"
 #include "argparse/argparse.hpp"
 
 int main(int argc, char *argv[])
@@ -19,6 +19,14 @@ int main(int argc, char *argv[])
     }
     float fuelVolume = program.get<float>("--fuel");
 
-    Game game(fuelVolume);
-    game.run();
+    try
+    {
+        Game game(fuelVolume);
+        game.run();
+    }
+    catch (const std::exception &err)
+    {
+        std::cerr << err.what() << std::endl;
+        return 1;
+    }
 }

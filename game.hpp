@@ -1,18 +1,10 @@
-#ifndef GAME_HPP
-#define GAME_HPP
+#ifndef GAME_H
+#define GAME_H
 
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <iostream>
-#include <unistd.h>
-
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-
 #include "config.hpp"
+#include "resourcemanagers.hpp"
 
 class Game
 {
@@ -30,18 +22,9 @@ private:
 
     sf::RenderWindow mWindow;
 
-    sf::Texture mSpaceTexture;
-    sf::Texture mLunarTexture;
-    sf::Texture mPlayerTexture;
-    sf::Texture mMainFlameTexture;
-    sf::Texture mLeftFlameTexture;
-    sf::Texture mRightFlameTexture;
-    sf::Sprite mSpaceSprite;
-    sf::Sprite mLunarSprite;
-    sf::Sprite mPlayerSprite;
-    sf::Sprite mMainFlameSprite;
-    sf::Sprite mLeftFlameSprite;
-    sf::Sprite mRightFlameSprite;
+    TextureHolder mTextureHolder;
+    SpriteHolder mSpriteHolder;
+
     sf::Sound mRocketSound;
     sf::SoundBuffer mRocketSoundBuffer;
     sf::Sound mExplosionSound;
