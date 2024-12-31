@@ -14,7 +14,7 @@ enum class Entity
     RightFlame
 };
 
-std::string toString(Entity texture);
+std::string to_string(Entity texture);
 
 template <typename Resource, typename Identifier>
 class ResourceHolder
@@ -42,4 +42,45 @@ public:
 private:
     std::map<Entity, std::unique_ptr<sf::Sprite>> mSprites;
 };
+
+template <typename Resource, typename Identifier>
+void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string &filename)
+{
+    auto resource = std::make_unique<Resource>();
+    if (!resource->loadFromFile(filename))
+    {
+        throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
+    }
+    auto inserted = mResources.emplace(id, std::move(resource));
+    assert(inserted.second);
+}
+
+template <typename Resource, typename Identifier>
+Resource &ResourceHolder<Resource, Identifier>::get(Identifier id)
+{
+    auto found = mResources.find(id);
+    assert(found != mResources.end());
+    return *found->second;
+};
+
+template <typename Resource, typename Identifier>
+Resource &ResourceHolder<Resource, Identifier>::operator[](Identifier id)
+{
+    return get(id);
+};
+
+template <typename Resource, typename Identifier>
+const Resource &ResourceHolder<Resource, Identifier>::get(Identifier id) const
+{
+    auto found = mResources.find(id);
+    assert(found != mResources.end());
+    return *found->second;
+};
+
+template <typename Resource, typename Identifier>
+const Resource &ResourceHolder<Resource, Identifier>::operator[](Identifier id) const
+{
+    return get(id);
+};
+
 #endif // RESOURCEMANAGERS_H
